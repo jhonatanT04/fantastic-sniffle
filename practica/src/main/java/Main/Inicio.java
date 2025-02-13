@@ -10,15 +10,12 @@ import DAO.EspacioDAO;
 import DAO.HorarioDAO;
 import DAO.PersonaDAO;
 import DAO.TarifaDAO;
+import Services.NotificacionService;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
-import ups.practica.Espacio;
-import ups.practica.Horario;
-import ups.practica.Persona;
-import ups.practica.Tarifa;
-
+import ups.practica.*;
 
 
 @Singleton
@@ -79,6 +76,20 @@ public class Inicio {
 		per2.setTelefono("0921312323");
 		daoPersona.agregarPersona(per2);
 		
+		/*Persona per3 = new Persona();
+		per3.setPassword("justin12");
+		per3.setEmail("justinmateolucero@gmail.com");
+		per3.setApellido("Mateo");
+		per3.setCedula("0921312323");
+		per3.setDireccion("Casa");
+		per3.setNombre("Justin");
+		per3.setRol(false);
+		per3.setTelefono("0921312323");
+		daoPersona.agregarPersona(per3);*/
+		
+		//NotificacionService servicio = new NotificacionService();
+	    //servicio.enviarCorreoApertura("justinmateolucero@gmail.com", "Justin", "20:20");
+	    //servicio.enviarCorreoCierre("correo_destino@gmail.com", "Juan", "20:00");
 		
 		List<Tarifa> listaTarifas = new ArrayList<>();
         

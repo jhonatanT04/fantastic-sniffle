@@ -26,10 +26,10 @@ public class TicketService {
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(String placa) {
+    public Response create(Ticket ticket) {
         try {
-            gTickets.agregarTicket(placa);
-            return Response.ok(placa).build();
+            gTickets.agregarTicket(ticket);
+            return Response.ok(ticket).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al crear el ticket")).build();
@@ -51,13 +51,46 @@ public class TicketService {
             return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al actualizar el ticket")).build();
         }
     }
-
+    
+    @PUT
+    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response cambiarEstadoDeTicket(String placa) {
+        try {
+            if (placa != null ) {
+                gTickets.cambiarEstadoTicket(placa);
+                return Response.ok(new Respuesta(Respuesta.OK, "Ticket actualizado con éxito")).build();
+            }
+            return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Datos inválidos para la actualización")).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al actualizar el ticket")).build();
+        }
+    }
+    
     @GET
     @Path("/{id}")
     @Produces("application/json")
     public Response read(@PathParam("id") int id) {
         try {
             Ticket ticket = gTickets.buscarTicket(id);
+            if (ticket == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(ticket).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al buscar el ticket")).build();
+        }
+    }
+    
+    
+    @GET
+    @Path("/ticketPendiente/{placa}")
+    @Produces("application/json")
+    public Response buscarPorPlacaTicketsPendientes(@PathParam("placa") String placa) {
+        try {
+            Ticket ticket = gTickets.buscarTicketPendientePorPlaca(placa);
             if (ticket == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }

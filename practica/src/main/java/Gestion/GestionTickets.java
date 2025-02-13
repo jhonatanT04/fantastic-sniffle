@@ -14,8 +14,8 @@ public class GestionTickets {
     @EJB
     private TicketDAO ticketDAO;
 
-    public void agregarTicket(String placa) {
-        ticketDAO.agregarTicket(placa);
+    public void agregarTicket(Ticket ticket) {
+        ticketDAO.agregarTicket(ticket);
     }
 
     public List<Ticket> listarTickets() {
@@ -25,6 +25,15 @@ public class GestionTickets {
     public Ticket buscarTicket(int id) {
         return ticketDAO.buscarTicket(id);
     }
+    
+    public Ticket buscarTicketPendientePorPlaca(String placa) {
+        return ticketDAO.buscarTicketPendientePorPlaca(placa);
+    }
+    
+    public Ticket cambiarEstadoTicket(String placa) {
+        return ticketDAO.cambiarEstadoTicket(placa);
+    }
+    
     public List<Ticket> ListarTicketpotPersona(int id) {
         return ticketDAO.listarTicketsPorCliente(id);
     }

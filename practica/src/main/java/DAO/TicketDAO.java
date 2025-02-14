@@ -18,12 +18,12 @@ public class TicketDAO {
     @PersistenceContext
     EntityManager em;
     
-    
     public void agregarTicket(Ticket ticket) {
         LocalTime ahora = LocalTime.now();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
     	ticket.setFechaIngreso(ahora.format(formato));
     	ticket.setFechaSalida(null);
+    	
         em.persist(ticket);
     }
 
@@ -33,7 +33,7 @@ public class TicketDAO {
     
     
     
-    public List<Ticket> listarTickets() {
+    public List<Ticket> listarTickets() {	
         TypedQuery<Ticket> query = em.createQuery("SELECT t FROM Ticket t", Ticket.class);
         return query.getResultList();
     }
@@ -48,19 +48,26 @@ public class TicketDAO {
     
     public Ticket cambiarEstadoTicket(String placa) {
         TypedQuery<Ticket> query = em.createQuery(
-            "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
-        query.setParameter("placa", placa);
-        List<Ticket> resultados = query.getResultList();
-        System.out.println(resultados);
-        Ticket tick = resultados.isEmpty() ? null : resultados.get(0);
-        return tick;
+                "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
+            query.setParameter("placa", placa);
+            List<Ticket> resultados = query.getResultList();
+        System.out.println(resultados);    
+        Ticket ticket = resultados.isEmpty() ? null : resultados.get(0);
+        if (ticket!=null) {
+        	ticket.setValorTotal(10.2);
+        	LocalTime ahora = LocalTime.now();
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
+            ticket.setFechaSalida(ahora.format(formato));
+            ticket.setValorTotal(10.2);	
+		}
+        return em.merge(ticket);
     }
     public Ticket buscarTicketPendientePorPlaca(String placa) {
         TypedQuery<Ticket> query = em.createQuery(
             "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
         query.setParameter("placa", placa);
         List<Ticket> resultados = query.getResultList();
-        System.out.println(resultados);
+        
         return resultados.isEmpty() ? null : resultados.get(0);
     }
     

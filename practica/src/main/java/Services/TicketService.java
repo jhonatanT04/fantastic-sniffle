@@ -28,7 +28,14 @@ public class TicketService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Ticket ticket) {
         try {
+        	String a = (ticket.getPlaca().toUpperCase().charAt(0) + ticket.getPlaca().substring(1, ticket.getPlaca().length()).toLowerCase()).trim();
+        	ticket.setPlaca(a);
+        	
+            if(gTickets.buscarTicketPendientePorPlaca( ticket.getPlaca() ) != null) {
+            	return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Número de placa ya tiene un ticket/contrato asociado")).build();
+        	}
             gTickets.agregarTicket(ticket);
+            
             return Response.ok(ticket).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,21 +59,7 @@ public class TicketService {
         }
     }
     
-    @PUT
-    @Produces("application/json")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response cambiarEstadoDeTicket(String placa) {
-        try {
-            if (placa != null ) {
-                gTickets.cambiarEstadoTicket(placa);
-                return Response.ok(new Respuesta(Respuesta.OK, "Ticket actualizado con éxito")).build();
-            }
-            return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Datos inválidos para la actualización")).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al actualizar el ticket")).build();
-        }
-    }
+    
     
     @GET
     @Path("/{id}")
@@ -91,6 +84,7 @@ public class TicketService {
     public Response buscarPorPlacaTicketsPendientes(@PathParam("placa") String placa) {
         try {
             Ticket ticket = gTickets.buscarTicketPendientePorPlaca(placa);
+            
             if (ticket == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
@@ -101,6 +95,25 @@ public class TicketService {
         }
     }
     
+    
+    @PUT
+    @Path("/cambiarEstado")
+    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response cambiarEstadoDeTicket(Ticket request) {
+        try {
+            if (request != null && request.getPlaca() != null && !request.getPlaca().isEmpty()) {
+                gTickets.cambiarEstadoTicket(request.getPlaca());
+                return Response.ok(new Respuesta(Respuesta.OK, "Ticket actualizado con éxito")).build();
+            }
+            return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Datos inválidos para la actualización")).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al actualizar el ticket")).build();
+        }
+    }
+    
+
     @GET
     @Path("/getTicketIDpersona/{id}")
     @Produces("application/json")

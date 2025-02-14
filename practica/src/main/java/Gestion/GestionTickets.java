@@ -6,6 +6,7 @@ import java.util.List;
 import DAO.TicketDAO;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import ups.practica.Ticket;
 
 @Stateless
@@ -13,8 +14,13 @@ public class GestionTickets {
 
     @EJB
     private TicketDAO ticketDAO;
-
+    
+    @Inject
+    private GestionEspacios gestionEspacios;
+    
     public void agregarTicket(Ticket ticket) {
+    	ticket.getEspacio().setEstado("R");
+    	gestionEspacios.modificarEspacio(ticket.getEspacio());
         ticketDAO.agregarTicket(ticket);
     }
 

@@ -22,7 +22,11 @@ public class Registro {
 	
 	@Column(name="fechaSalida")
 	private String fechaSalida;
-
+	
+	@Column(name="tipo")
+	private String tipo;
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -53,6 +57,14 @@ public class Registro {
 
 	public void setFechaSalida(String fechaSalida) {
 		this.fechaSalida = fechaSalida;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	@Override

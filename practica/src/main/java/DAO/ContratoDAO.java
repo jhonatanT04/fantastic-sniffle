@@ -2,7 +2,9 @@ package DAO;
 
 import java.util.List;
 import ups.practica.Contrato;
+import ups.practica.Espacio;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -12,6 +14,10 @@ import jakarta.persistence.TypedQuery;
 public class ContratoDAO {
 	@PersistenceContext
 	EntityManager em;
+	
+	@Inject
+	private EspacioDAO espacioDAO;
+	
 	public void agregarContrato(ups.practica.Contrato contrato) {
 		em.persist(contrato);
     }
@@ -30,6 +36,35 @@ public class ContratoDAO {
             em.remove(contrato);
         }
     }
+    
+    public Contrato actualizarEspacio(int contratoId) {
+        Contrato contrato = em.find(Contrato.class, contratoId);
+        if (contrato == null) {
+            return null;
+        }
+        Espacio espacio = contrato.getEspacio();
+        if (espacio == null) {
+        } else {
+            espacio.setEstado("R");
+            espacioDAO.modificarEspacio(espacio);
+        }
+        return em.merge(contrato);
+    }
+    
+    public Contrato actualizarEspacioalEliminar(int contratoId) {
+        Contrato contrato = em.find(Contrato.class, contratoId);
+        if (contrato == null) {
+            return null;
+        }
+        Espacio espacio = contrato.getEspacio();
+        if (espacio == null) {
+        } else {
+            espacio.setEstado("D");
+            espacioDAO.modificarEspacio(espacio);
+        }
+        return em.merge(contrato);
+    }
+
     
     public Contrato modificarContrato(Contrato contrato) {
         return em.merge(contrato);

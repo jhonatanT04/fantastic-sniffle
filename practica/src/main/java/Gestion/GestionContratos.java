@@ -23,7 +23,13 @@ public class GestionContratos {
 	public List<Contrato> buscarContratosIdPersona(int id) {
 		return contratoDAO.buscarContratosPorPersonaId(id);
 	}
+	public Contrato actualizarEspacio(int id) {
+		return contratoDAO.actualizarEspacio(id);
+	}
 	
+	public Contrato actualizarEspacioalEliminar(int id) {
+		return contratoDAO.actualizarEspacioalEliminar(id);
+	}
 	public Contrato readContrato(int id) {
 		return contratoDAO.buscarContrato(id);
 	}

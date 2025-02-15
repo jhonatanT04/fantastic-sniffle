@@ -92,26 +92,42 @@ public class Inicio {
 	    //servicio.enviarCorreoCierre("correo_destino@gmail.com", "Juan", "20:00");
 		
 		List<Tarifa> listaTarifas = new ArrayList<>();
-        
-        Tarifa tarifa1 = new Tarifa();
-        tarifa1.setTiempo("1 hora");
-        tarifa1.setCosto(1.00);
 
-        Tarifa tarifa2 = new Tarifa();
-        tarifa2.setTiempo("2 horas");
-        tarifa2.setCosto(2.00);
+		Tarifa tarifa1 = new Tarifa();
+		tarifa1.setTiempo("30 minutos");
+		tarifa1.setCosto(0.50);
 
-        Tarifa tarifa3 = new Tarifa();
-        tarifa3.setTiempo("Mensual");
-        tarifa3.setCosto(40.00);
+		Tarifa tarifa2 = new Tarifa();
+		tarifa2.setTiempo("1 hora");
+		tarifa2.setCosto(1.00);
 
-        listaTarifas.add(tarifa1);
-        listaTarifas.add(tarifa2);
-        listaTarifas.add(tarifa3);
+		Tarifa tarifa5 = new Tarifa();
+		tarifa5.setTiempo("8 horas");
+		tarifa5.setCosto(6.00);
 
-        for (Tarifa tarifa : listaTarifas) {
-            daoTarifa.agregarTarifa(tarifa);
-        }
+		Tarifa tarifa6 = new Tarifa();
+		tarifa6.setTiempo("12 horas");
+		tarifa6.setCosto(8.00);
+
+		Tarifa tarifa7 = new Tarifa();
+		tarifa7.setTiempo("24 horas");
+		tarifa7.setCosto(12.00);
+
+		Tarifa tarifa9 = new Tarifa();
+		tarifa9.setTiempo("Mensual");
+		tarifa9.setCosto(40.00);
+
+		listaTarifas.add(tarifa1);
+		listaTarifas.add(tarifa2);
+		listaTarifas.add(tarifa5);
+		listaTarifas.add(tarifa6);
+		listaTarifas.add(tarifa7);
+		listaTarifas.add(tarifa9);
+
+		for (Tarifa tarifa : listaTarifas) {
+		    daoTarifa.agregarTarifa(tarifa);
+		}
+
 
         List<Espacio> listaEspacios = new ArrayList<>();
         for (int i = 1; i <= 30; i++) {

@@ -99,4 +99,40 @@ public class ContratoService {
 			return Response.status(503).entity(new Respuesta(Respuesta.ERROR,"Error en la base de datos")).build();
 		}
 	}
+	
+	@PUT
+    @Path("/reserva/{id}")
+    @Produces("application/json")
+    public Response actualizarEspacio(@PathParam("id") int id) {
+        try {
+            Contrato contratoFinalizado = gestionContrato.actualizarEspacio(id); 
+            
+            if (contratoFinalizado == null) {
+                return Response.status(404).entity(new Respuesta(Respuesta.ERROR, "Contrato no encontrado.")).build();
+            }
+
+            return Response.ok(new Respuesta(Respuesta.OK, "Contrato finalizado y espacio actualizado.")).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error en la base de datos")).build();
+        }
+    }
+	
+	@PUT
+    @Path("/reservaeliminar/{id}")
+    @Produces("application/json")
+    public Response actualizarEspacioalEliminar(@PathParam("id") int id) {
+        try {
+            Contrato contratoFinalizado = gestionContrato.actualizarEspacioalEliminar(id); 
+            
+            if (contratoFinalizado == null) {
+                return Response.status(404).entity(new Respuesta(Respuesta.ERROR, "Contrato no encontrado.")).build();
+            }
+
+            return Response.ok(new Respuesta(Respuesta.OK, "Contrato finalizado y espacio actualizado.")).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error en la base de datos")).build();
+        }
+    }
 }

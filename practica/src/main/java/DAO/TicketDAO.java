@@ -4,9 +4,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import ups.practica.Espacio;
 import ups.practica.Ticket;
 
 
@@ -16,9 +18,12 @@ public class TicketDAO {
     @PersistenceContext
     EntityManager em;
     
+    @Inject
+    private EspacioDAO espacioDAO;
+    
     public void agregarTicket(Ticket ticket) {
         LocalTime ahora = LocalTime.now();
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyy HH:mm:ss");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern(" HH:mm:ss");
     	ticket.setFechaIngreso(ahora.format(formato));
     	ticket.setFechaSalida(null);
     	
@@ -50,13 +55,15 @@ public class TicketDAO {
                 "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
             query.setParameter("placa", placa);
             List<Ticket> resultados = query.getResultList();
-        System.out.println(resultados);    
         Ticket ticket = resultados.isEmpty() ? null : resultados.get(0);
         if (ticket!=null) {
         	ticket.setValorTotal(10.2);
         	LocalTime ahora = LocalTime.now();
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
             ticket.setFechaSalida(ahora.format(formato));
+            Espacio espacio = ticket.getEspacio();
+            espacio.setEstado("D");
+            espacioDAO.modificarEspacio(espacio);
             ticket.setValorTotal(10.2);	
 		}
         return em.merge(ticket);

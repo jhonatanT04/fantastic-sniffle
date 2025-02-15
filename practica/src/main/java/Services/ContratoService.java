@@ -27,6 +27,8 @@ public class ContratoService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createContrato(Contrato contrato) { 
 		try {
+			String a = contrato.getPlaca().toUpperCase();
+        	contrato.setPlaca(a);
 			gestionContrato.agregarContrato(contrato);
 			return Response.ok(contrato).build();
 		} catch (Exception e) {
@@ -78,7 +80,7 @@ public class ContratoService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getContrato(@PathParam("id") int id) {
 		try {
-			Contrato contrato = gestionContrato.readHorario(id);
+			Contrato contrato = gestionContrato.readContrato(id);
 			return Response.ok(contrato).build();
 		} catch (Exception e) {
 			e.printStackTrace();

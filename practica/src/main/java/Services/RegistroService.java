@@ -1,8 +1,12 @@
 package Services;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import Gestion.GestionContratos;
 import Gestion.GestionRegistros;
+import Gestion.GestionTickets;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -16,6 +20,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ups.practica.Registro;
+import ups.practica.Ticket;
 
 
 @Path("/registros")
@@ -23,12 +28,37 @@ public class RegistroService {
 
     @Inject
     private GestionRegistros gRegistros;
+    
+    @Inject
+    private GestionContratos gContratos;
+    
+    @Inject
+    private GestionTickets gTickets;
 
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Registro registro) {
         try {
+        	String a = registro.getPlaca().toUpperCase();
+        	registro.setPlaca(a);
+        	
+        	if(gRegistros.buscarRegistroPendientePorPlaca(a)!=null) {
+            	return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Esta placa ya esta dentro del parqueadero")).build();
+        	}
+
+        	registro.setPlaca(a);
+        	if(gTickets.buscarTicketPendientePorPlaca(registro.getPlaca())==null && gContratos.BuscarContratoPorPlaca(registro.getPlaca())==null) {
+        		return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Esta placa no esta asociada a ningun ticket/Contrato")).build();
+        	}
+        	if(gContratos.BuscarContratoPorPlaca(registro.getPlaca())!=null) {
+        		registro.setTipo('C');
+        	}else if(gTickets.buscarTicketPendientePorPlaca(registro.getPlaca())!=null) {
+        		registro.setTipo('T');
+        	}
+        	LocalDateTime fechaHora = LocalDateTime.now();
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            registro.setFechaIngreso(fechaHora.format(formato));
             gRegistros.agregarRegistro(registro);
             return Response.ok(registro).build();
         } catch (Exception e) {
@@ -43,6 +73,30 @@ public class RegistroService {
     public Response update(Registro registro) {
         try {
             gRegistros.modificarRegistro(registro);            
+            return Response.ok(registro).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al actualizar el registro")).build();
+        }
+    }
+    
+    
+    @PUT
+    @Path("/salidaVehiculo")
+    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response salidaVehiculo(Registro registro) {
+        try {
+        	Registro reg = gRegistros.buscarRegistroPendientePorPlaca(registro.getPlaca());
+        	LocalDateTime fechaHora = LocalDateTime.now();
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            reg.setFechaSalida(fechaHora.format(formato));
+            System.out.println(reg.getTipo()+"  "+(reg.getTipo()=='T'));
+            if(reg.getTipo()=='T') {
+            	Ticket ticket = gTickets.cambiarEstadoTicket(reg.getPlaca());
+            	System.out.println(ticket);
+            }
+            gRegistros.modificarRegistro(reg);            
             return Response.ok(registro).build();
         } catch (Exception e) {
             e.printStackTrace();

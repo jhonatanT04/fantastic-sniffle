@@ -24,8 +24,11 @@ public class GestionContratos {
 		return contratoDAO.buscarContratosPorPersonaId(id);
 	}
 	
-	public Contrato readHorario(int id) {
+	public Contrato readContrato(int id) {
 		return contratoDAO.buscarContrato(id);
+	}
+	public Contrato BuscarContratoPorPlaca(String placa) {
+		return contratoDAO.buscarContratoPorPlaca(placa);
 	}
 	public Contrato modificarContrato(Contrato contrato) {
 		return contratoDAO.modificarContrato(contrato);

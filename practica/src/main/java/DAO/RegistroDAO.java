@@ -12,6 +12,7 @@ import jakarta.persistence.TypedQuery;
 import ups.practica.Registro;
 
 
+
 @Stateless
 public class RegistroDAO {
 	
@@ -24,6 +25,23 @@ public class RegistroDAO {
 
     public Registro buscarRegistro(int id) {
         return em.find(Registro.class, id);
+    }
+    
+    public Registro buscarRegistroPorPlaca(String placa) {
+    	TypedQuery<Registro> query = em.createQuery(
+                "SELECT t FROM Registro t WHERE t.placa = :placa", Registro.class);
+            query.setParameter("placa", placa);    
+        List<Registro> resultados = query.getResultList();
+        return resultados.isEmpty() ? null : resultados.get(0);
+    }
+    
+    public Registro buscarRegistroPendientePorPlaca(String placa) {
+    	TypedQuery<Registro> query = em.createQuery(
+                "SELECT t FROM Registro t WHERE t.placa = :placa AND t.fechaSalida is null", Registro.class);
+            query.setParameter("placa", placa);    
+        List<Registro> resultados = query.getResultList();
+        System.out.println(resultados);
+        return resultados.isEmpty() ? null : resultados.get(0);
     }
 
     public List<Registro> listarRegistros() {

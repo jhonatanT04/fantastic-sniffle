@@ -3,8 +3,6 @@ package DAO;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import Gestion.GestionEspacios;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,7 +18,7 @@ public class TicketDAO {
     
     public void agregarTicket(Ticket ticket) {
         LocalTime ahora = LocalTime.now();
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyy HH:mm:ss");
     	ticket.setFechaIngreso(ahora.format(formato));
     	ticket.setFechaSalida(null);
     	
@@ -47,6 +45,7 @@ public class TicketDAO {
     }	
     
     public Ticket cambiarEstadoTicket(String placa) {
+    	placa.toUpperCase();
         TypedQuery<Ticket> query = em.createQuery(
                 "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
             query.setParameter("placa", placa);
@@ -63,6 +62,7 @@ public class TicketDAO {
         return em.merge(ticket);
     }
     public Ticket buscarTicketPendientePorPlaca(String placa) {
+    	placa.toUpperCase();
         TypedQuery<Ticket> query = em.createQuery(
             "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
         query.setParameter("placa", placa);

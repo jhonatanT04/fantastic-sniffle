@@ -24,7 +24,7 @@ public class Registro {
 	private String fechaSalida;
 	
 	@Column(name="tipo")
-	private String tipo;
+	private char tipo;
 	
 	
 	public int getId() {
@@ -59,19 +59,21 @@ public class Registro {
 		this.fechaSalida = fechaSalida;
 	}
 
-	public String getTipo() {
+	public char getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(char tipo) {
 		this.tipo = tipo;
 	}
 
 	@Override
 	public String toString() {
 		return "Registro [id=" + id + ", placa=" + placa + ", fechaIngreso=" + fechaIngreso + ", fechaSalida="
-				+ fechaSalida + "]";
+				+ fechaSalida + ", tipo=" + tipo + "]";
 	}
+
+	
 	
 	
 }

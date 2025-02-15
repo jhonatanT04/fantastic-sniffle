@@ -2,6 +2,7 @@ package Services;
 
 import java.util.List;
 
+import Gestion.GestionContratos;
 import Gestion.GestionTickets;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -22,16 +23,19 @@ public class TicketService {
 
     @Inject
     private GestionTickets gTickets;
+    
+    @Inject
+    private GestionContratos gContratos;
 
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Ticket ticket) {
         try {
-        	String a = (ticket.getPlaca().toUpperCase().charAt(0) + ticket.getPlaca().substring(1, ticket.getPlaca().length()).toLowerCase()).trim();
+        	String a = ticket.getPlaca().toUpperCase();
         	ticket.setPlaca(a);
         	
-            if(gTickets.buscarTicketPendientePorPlaca( ticket.getPlaca() ) != null) {
+            if(gTickets.buscarTicketPendientePorPlaca( ticket.getPlaca() ) != null||gContratos.BuscarContratoPorPlaca( ticket.getPlaca() ) != null) {
             	return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Número de placa ya tiene un ticket/contrato asociado")).build();
         	}
             gTickets.agregarTicket(ticket);

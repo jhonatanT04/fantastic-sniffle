@@ -2,7 +2,6 @@ package DAO;
 
 import java.util.List;
 import ups.practica.Contrato;
-
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,8 +18,7 @@ public class ContratoDAO {
 	
 	public Contrato buscarContrato(int id) {
     	return em.find(Contrato.class, id);
-    }
-	
+    }	
     public List<Contrato> listarContrato() {
         TypedQuery<Contrato> query = em.createQuery("SELECT p FROM Contrato p", Contrato.class);
         return query.getResultList();
@@ -42,5 +40,13 @@ public class ContratoDAO {
             "SELECT c FROM Contrato c WHERE c.usuario.id = :personaId", Contrato.class);
         query.setParameter("personaId", personaId);
         return query.getResultList();
+    }
+    public Contrato buscarContratoPorPlaca(String placa) {
+    	placa.toUpperCase();
+    	TypedQuery<Contrato> query = em.createQuery(
+                "SELECT t FROM Contrato t WHERE t.placa = :placa ", Contrato.class);
+            query.setParameter("placa", placa);
+            List<Contrato> resultados = query.getResultList();
+            return resultados.isEmpty() ? null : resultados.get(0);
     }
 }

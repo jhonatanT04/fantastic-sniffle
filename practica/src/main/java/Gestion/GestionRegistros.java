@@ -29,6 +29,12 @@ public class GestionRegistros {
     public Registro buscarRegistro(int id) {
         return registroDAO.buscarRegistro(id);
     }
+    public Registro buscarRegistroporPlaca(String placa) {
+        return registroDAO.buscarRegistroPorPlaca(placa);
+    }
+    public Registro buscarRegistroPendientePorPlaca(String placa) {
+    	return registroDAO.buscarRegistroPendientePorPlaca(placa);
+    }
 
     public Registro modificarRegistro(Registro registro) {
         return registroDAO.modificarTicket(registro);

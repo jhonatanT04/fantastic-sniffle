@@ -193,4 +193,13 @@ public class TicketService {
             return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al eliminar el ticket")).build();
         }
     }
+    
+    @GET
+    @Path("/validarPlaca/{placa}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response validarPlaca(@PathParam("placa") String placa) {
+        boolean tieneTicket = gTickets.validarPlacaConTicketActiva(placa);
+        return Response.ok(tieneTicket).build();
+    }
+
 }

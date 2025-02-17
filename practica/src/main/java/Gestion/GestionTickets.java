@@ -55,6 +55,10 @@ public class GestionTickets {
     public Ticket modificarTicket(Ticket ticket) {
         return ticketDAO.modificarTicket(ticket);
     }
+    
+    public boolean validarPlacaConTicketActiva(String placa) {
+    	return ticketDAO.validarPlacaConTicketActivo(placa);
+    }
 
     public void eliminarTicket(int id) {
         ticketDAO.eliminarTicket(id);

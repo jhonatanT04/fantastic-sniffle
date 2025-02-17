@@ -105,12 +105,9 @@ public class Inicio {
 		tarifa5.setTiempo("8 horas");
 		tarifa5.setCosto(6.00);
 
-		Tarifa tarifa6 = new Tarifa();
-		tarifa6.setTiempo("12 horas");
-		tarifa6.setCosto(8.00);
 
 		Tarifa tarifa7 = new Tarifa();
-		tarifa7.setTiempo("24 horas");
+		tarifa7.setTiempo("Dia");
 		tarifa7.setCosto(12.00);
 
 		Tarifa tarifa9 = new Tarifa();
@@ -120,7 +117,6 @@ public class Inicio {
 		listaTarifas.add(tarifa1);
 		listaTarifas.add(tarifa2);
 		listaTarifas.add(tarifa5);
-		listaTarifas.add(tarifa6);
 		listaTarifas.add(tarifa7);
 		listaTarifas.add(tarifa9);
 

@@ -36,7 +36,9 @@ public class NotificacionService {
     @PostConstruct
     public void iniciarNotificaciones() {
         System.out.println("⏰ Iniciando servicio de notificaciones...");
-
+        
+        verificarHorariosYNotificar();
+        
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {

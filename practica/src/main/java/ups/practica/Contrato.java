@@ -12,7 +12,7 @@ public class Contrato{
 	@Column(name="id_contrato")
 	private int id;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="id_tarifa")
 	private Tarifa tarifa; 
 	

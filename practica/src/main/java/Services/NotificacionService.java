@@ -20,7 +20,7 @@ import DAO.ContratoDAO;
 public class NotificacionService {
     
     @Inject
-    private HorarioDAO horarioDAO;//123
+    private HorarioDAO horarioDAO;
 
     @Inject
     private PersonaDAO personaDAO;

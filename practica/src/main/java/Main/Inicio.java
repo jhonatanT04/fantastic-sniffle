@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import DAO.ContratoDAO;
 import DAO.EspacioDAO;
 import DAO.HorarioDAO;
 import DAO.PersonaDAO;
@@ -36,11 +37,17 @@ public class Inicio {
     @Inject
     private HorarioDAO daoHorario;
     
+    @Inject
+    private ContratoDAO contratoDAO;
+    
+    @Inject
+    private NotificacionService notificacionService;
 	@PostConstruct
 	public void init() {
 		System.out.println("Hola mundo EJB");
 		Horario hor = new Horario();
-		
+		notificacionService.verificarHorariosYNotificar();
+		contratoDAO.revisarYFinalizarContratos();
 		/*hor.setDia("Jueves");
 		hor.setHoraApertura("12:00");
 		hor.setHoraCierre("20:00");

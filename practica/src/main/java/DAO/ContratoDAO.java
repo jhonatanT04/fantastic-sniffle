@@ -1,5 +1,6 @@
 package DAO;
 
+import java.util.Date;
 import java.util.List;
 import ups.practica.Contrato;
 import ups.practica.Espacio;
@@ -20,6 +21,8 @@ public class ContratoDAO {
 	
 	@Inject
 	private TicketDAO ticketDAO;
+	
+	
 	
 	public Contrato agregarContrato(Contrato contrato) {
 	    if (ticketDAO.validarPlacaConTicketActivo(contrato.getPlaca())) {
@@ -94,4 +97,33 @@ public class ContratoDAO {
             List<Contrato> resultados = query.getResultList();
             return resultados.isEmpty() ? null : resultados.get(0);
     }
+    
+    
+    public void revisarYFinalizarContratos() {
+        Date hoy = new Date(); 
+
+        List<Contrato> contratos = listarContrato(); 
+
+        for (Contrato contrato : contratos) {
+            if (contrato.getFechaFin().compareTo(hoy) <= 0) { 
+                liberarEspacioPorContrato(contrato.getId());
+                eliminarContrato(contrato.getId());
+
+            }
+        }
+    }
+
+    
+    public void liberarEspacioPorContrato(int contratoId) {
+        Contrato contrato = em.find(Contrato.class, contratoId);
+        if (contrato != null) {
+            Espacio espacio = contrato.getEspacio();
+            if (espacio != null) {
+                espacio.setEstado("D"); 
+                espacioDAO.modificarEspacio(espacio);
+            }
+        } else {
+        }
+    }
+
 }

@@ -42,4 +42,22 @@ public class GestionContratos {
 	public void eliminarContrato(int id ) {
 		contratoDAO.eliminarContrato(id);
 	}
+	
+	public boolean finalizarContrato(int contratoId) {
+	    Contrato contrato = contratoDAO.buscarContrato(contratoId);
+
+	    if (contrato != null) {
+	        try {
+	            contratoDAO.eliminarContrato(contratoId);
+	            contratoDAO.liberarEspacioPorContrato(contratoId); 
+	            return true; 
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return false; 
+	}
+
+	
+
 }

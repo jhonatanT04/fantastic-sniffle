@@ -135,4 +135,22 @@ public class ContratoService {
             return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error en la base de datos")).build();
         }
     }
+	
+	@PUT
+	@Path("/finalizar/{id}")
+	@Produces("application/json")
+	public Response finalizarContrato(@PathParam("id") int id) {
+		try {
+			boolean finalizado = gestionContrato.finalizarContrato(id);
+
+			if (!finalizado) {
+				return Response.status(404).entity(new Respuesta(Respuesta.ERROR, "Contrato no encontrado o ya finalizado.")).build();
+			}
+
+			return Response.ok(new Respuesta(Respuesta.OK, "Contrato finalizado y espacio liberado correctamente.")).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al finalizar el contrato en la base de datos")).build();
+		}
+	}
 }

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Gestión de Tarifas</title>
+	<h:outputStylesheet library="css" name="tarifascss.css"/>
+</h:head>
+
+<h:body>
+    <h2>Gestión de Tarifas</h2>
+
+    <h:form>
+        <h:commandButton value="Agregar Tarifa" action="#{tarifaBean.mostrarFormularioAgregar()}" styleClass="btnA" />
+        <h:dataTable value="#{tarifaBean.tarifas}" var="t" styleClass="tabla-tarifas">
+            <h:column>
+                <f:facet name="header">Tiempo</f:facet>
+                #{t.tiempo}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Costo</f:facet>
+                #{t.costo}$ 
+            </h:column>
+            <h:column>
+                <f:facet name="header">Acciones</f:facet>
+                <h:commandButton value="Editar" action="#{tarifaBean.mostrarFormularioEditar(t)}" styleClass="btn-tabla" />
+                <h:commandButton value="Eliminar" action="#{tarifaBean.eliminarTarifa(t.id)}"
+                                 styleClass="btn-tabla btn-eliminar"
+                                 onclick="return confirm('¿Estás seguro de eliminar esta tarifa?');"/>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+
+    <h:panelGroup rendered="#{tarifaBean.mostrarAgregar}" styleClass="formulario-tarifa">
+        <h2>Agregar Tarifa</h2>
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel for="tiempoAgregar" value="Tiempo:" styleClass="label-tarifas"/>
+                <h:selectOneMenu id="tiempoAgregar" value="#{tarifaBean.tarifa.tiempo}" required="true" styleClass="select-tarifas">
+                    <f:selectItem itemValue="" itemLabel="Seleccione una opción" noSelectionOption="true"/>
+                    <f:selectItem itemValue="Minutos" itemLabel="Minutos"/>
+                    <f:selectItem itemValue="Hora" itemLabel="Hora"/>
+                    <f:selectItem itemValue="Día" itemLabel="Día"/>
+                    <f:selectItem itemValue="Mensual" itemLabel="Mensual"/>
+                </h:selectOneMenu>
+
+                <h:outputLabel for="costoAgregar" value="Costo:" styleClass="label-tarifas"/>
+                <h:inputText id="costoAgregar" value="#{tarifaBean.tarifa.costo}" required="true" styleClass="input-tarifas">
+                    <f:validateDoubleRange minimum="0.01"/>
+                </h:inputText>
+            </h:panelGrid>
+
+            <h:commandButton value="Guardar" action="#{tarifaBean.guardarTarifa}" styleClass="btn-guardar"/>
+            <h:commandButton value="Cancelar" action="#{tarifaBean.cancelar}" styleClass="btn-cancelar"/>
+        </h:form>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{tarifaBean.mostrarEditar}" styleClass="formulario-tarifa">
+        <h2>Editar Tarifa</h2>
+        
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel for="tiempoEditar" value="Tiempo:" styleClass="label-tarifas" />
+                <h:selectOneMenu id="tiempoEditar" value="#{tarifaBean.tarifa.tiempo}" required="true" styleClass="select-tarifas">
+                    <f:selectItem itemValue="Minutos" itemLabel="Minutos"/>
+                    <f:selectItem itemValue="Hora" itemLabel="Hora"/>
+                    <f:selectItem itemValue="Día" itemLabel="Día"/>
+                    <f:selectItem itemValue="Mensual" itemLabel="Mensual"/>
+                </h:selectOneMenu>
+
+                <h:outputLabel for="costoEditar" value="Costo:"  styleClass="label-tarifas"/>
+                <h:inputText id="costoEditar" value="#{tarifaBean.tarifa.costo}" required="true" styleClass="input-tarifas">
+                    <f:validateDoubleRange minimum="0.01" />
+                </h:inputText>
+            </h:panelGrid>
+
+            <h:commandButton value="Actualizar" action="#{tarifaBean.actualizarTarifa}" styleClass="btn-guardar"/>
+            <h:commandButton value="Cancelar" action="#{tarifaBean.cancelar}" styleClass="btn-cancelar"/>
+        </h:form>
+    </h:panelGroup>
+
+</h:body>
+</html>

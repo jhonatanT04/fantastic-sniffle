@@ -55,6 +55,7 @@ public class RegistroService {
         		registro.setTipo('C');
         	}else if(gTickets.buscarTicketPendientePorPlaca(registro.getPlaca())!=null) {
         		registro.setTipo('T');
+        		gTickets.entradaTicket(a);
         	}
         	LocalDateTime fechaHora = LocalDateTime.now();
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -93,8 +94,7 @@ public class RegistroService {
             reg.setFechaSalida(fechaHora.format(formato));
             System.out.println(reg.getTipo()+"  "+(reg.getTipo()=='T'));
             if(reg.getTipo()=='T') {
-            	Ticket ticket = gTickets.cambiarEstadoTicket(reg.getPlaca());
-            	System.out.println(ticket);
+            	gTickets.salidaTicket(reg.getPlaca());
             }
             gRegistros.modificarRegistro(reg);            
             return Response.ok(registro).build();

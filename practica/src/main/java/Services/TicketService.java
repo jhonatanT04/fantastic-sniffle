@@ -4,10 +4,15 @@ import java.util.List;
 
 import Gestion.GestionContratos;
 import Gestion.GestionTickets;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -30,7 +35,7 @@ public class TicketService {
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(Ticket ticket) {
+    public Response create(@HeaderParam("Authorization") String authHeader,Ticket ticket) {
         try {
         	String a = ticket.getPlaca().toUpperCase();
         	ticket.setPlaca(a);
@@ -38,6 +43,33 @@ public class TicketService {
             if(gTickets.buscarTicketPendientePorPlaca( ticket.getPlaca() ) != null||gContratos.BuscarContratoPorPlaca( ticket.getPlaca() ) != null) {
             	return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Número de placa ya tiene un ticket/contrato asociado")).build();
         	}
+            
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token no proporcionado")).build();
+            }
+            String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Token expirado").build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Error al validar el token").build();
+            }
+            
+            Integer id = claims.get("id", Integer.class);
+            
+            
+            
+            if(gTickets.buscarTicketPendientePorPersona(id).size() > 2) {
+            	return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Existen Tickets pendientes")).build();
+        	}
+            
             gTickets.agregarTicket(ticket);
             
             return Response.ok(ticket).build();
@@ -107,7 +139,7 @@ public class TicketService {
     public Response cambiarEstadoDeTicket(Ticket request) {
         try {
             if (request != null && request.getPlaca() != null && !request.getPlaca().isEmpty()) {
-                gTickets.cambiarEstadoTicket(request.getPlaca());
+                gTickets.salidaTicket(request.getPlaca());
                 return Response.ok(new Respuesta(Respuesta.OK, "Ticket actualizado con éxito")).build();
             }
             return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Datos inválidos para la actualización")).build();

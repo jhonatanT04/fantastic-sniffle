@@ -1,5 +1,7 @@
 package DAO;
 
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -22,9 +24,7 @@ public class TicketDAO {
     private EspacioDAO espacioDAO;
     
     public void agregarTicket(Ticket ticket) {
-        LocalTime ahora = LocalTime.now();
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern(" HH:mm:ss");
-    	ticket.setFechaIngreso(ahora.format(formato));
+        ticket.setFechaIngreso(null);
     	ticket.setFechaSalida(null);
     	
         em.persist(ticket);
@@ -49,7 +49,7 @@ public class TicketDAO {
         return resultados;
     }	
     
-    public Ticket cambiarEstadoTicket(String placa) {
+    public Ticket salidaTicket(String placa) {
     	placa.toUpperCase();
         TypedQuery<Ticket> query = em.createQuery(
                 "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
@@ -58,8 +58,10 @@ public class TicketDAO {
         Ticket ticket = resultados.isEmpty() ? null : resultados.get(0);
         if (ticket!=null) {
         	ticket.setValorTotal(10.2);
-        	LocalTime ahora = LocalTime.now();
-            DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
+        	
+        	LocalDateTime ahora = LocalDateTime.now();
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        	
             ticket.setFechaSalida(ahora.format(formato));
             Espacio espacio = ticket.getEspacio();
             espacio.setEstado("D");
@@ -68,6 +70,29 @@ public class TicketDAO {
 		}
         return em.merge(ticket);
     }
+    
+    public Ticket entradaTicket(String placa) {
+    	placa.toUpperCase();
+        TypedQuery<Ticket> query = em.createQuery(
+                "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
+            query.setParameter("placa", placa);
+            List<Ticket> resultados = query.getResultList();
+        Ticket ticket = resultados.isEmpty() ? null : resultados.get(0);
+        if (ticket!=null) {
+        	ticket.setValorTotal(10.2);
+        	
+        	LocalDateTime ahora = LocalDateTime.now();
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        	ticket.setFechaIngreso(ahora.format(formato));
+            Espacio espacio = ticket.getEspacio();
+            espacio.setEstado("O");
+            espacioDAO.modificarEspacio(espacio);
+            ticket.setValorTotal(10.2);	
+		}
+        return em.merge(ticket);
+    }
+    
+    
     public Ticket buscarTicketPendientePorPlaca(String placa) {
     	placa.toUpperCase();
         TypedQuery<Ticket> query = em.createQuery(
@@ -77,6 +102,17 @@ public class TicketDAO {
         
         return resultados.isEmpty() ? null : resultados.get(0);
     }
+    
+    
+    public List<Ticket> buscarTicketPendientePorPersona(int id) {
+    	TypedQuery<Ticket> query = em.createQuery(
+                "SELECT t FROM Ticket t WHERE t.usuario.id = :id_cliente AND t.fechaSalida IS NULL", Ticket.class);
+            query.setParameter("id_cliente", id);
+        List<Ticket> resultados = query.getResultList();
+        
+        return resultados;
+    }
+    
     
     public void eliminarTicket(int id) {
         Ticket ticket = em.find(Ticket.class, id);

@@ -45,7 +45,7 @@ public class ContratoDAO {
         Espacio espacio = contrato.getEspacio();
         if (espacio == null) {
         } else {
-            espacio.setEstado("R");
+            espacio.setEstado("O");
             espacioDAO.modificarEspacio(espacio);
         }
         return em.merge(contrato);

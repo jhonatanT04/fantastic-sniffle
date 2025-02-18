@@ -22,11 +22,14 @@ public class TicketDAO {
     
     @Inject
     private EspacioDAO espacioDAO;
+
+    @Inject
+    private TarifaDAO tarifaDAO;
     
     public void agregarTicket(Ticket ticket) {
         ticket.setFechaIngreso(null);
     	ticket.setFechaSalida(null);
-    	
+    	ticket.setValorTotal(0);
         em.persist(ticket);
     }
 
@@ -66,7 +69,7 @@ public class TicketDAO {
             Espacio espacio = ticket.getEspacio();
             espacio.setEstado("D");
             espacioDAO.modificarEspacio(espacio);
-            ticket.setValorTotal(10.2);	
+            ticket.setValorTotal(tarifaDAO.consultaValorApagar(ticket.getFechaIngreso(), ticket.getFechaSalida()));	
 		}
         return em.merge(ticket);
     }
@@ -79,15 +82,14 @@ public class TicketDAO {
             List<Ticket> resultados = query.getResultList();
         Ticket ticket = resultados.isEmpty() ? null : resultados.get(0);
         if (ticket!=null) {
-        	ticket.setValorTotal(10.2);
+        	
         	
         	LocalDateTime ahora = LocalDateTime.now();
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         	ticket.setFechaIngreso(ahora.format(formato));
             Espacio espacio = ticket.getEspacio();
             espacio.setEstado("O");
-            espacioDAO.modificarEspacio(espacio);
-            ticket.setValorTotal(10.2);	
+            espacioDAO.modificarEspacio(espacio);	
 		}
         return em.merge(ticket);
     }

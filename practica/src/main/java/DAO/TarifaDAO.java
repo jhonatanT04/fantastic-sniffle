@@ -45,21 +45,53 @@ public class TarifaDAO {
         return query.getResultList();
     }
     
-    public double consultaValorApagar(String horaEntrada,String horaSalida) {
-    	List<Tarifa> tarifas = this.listarTarifa();
-    	
-    	LocalTime fechaInicio = LocalTime.parse(horaEntrada, DateTimeFormatter.ofPattern("HH:mm:ss"));
+    public double consultaValorApagar(String horaEntrada, String horaSalida) {
+        List<Tarifa> tarifas = this.listarTarifa();
+
+        LocalTime fechaInicio = LocalTime.parse(horaEntrada, DateTimeFormatter.ofPattern("HH:mm:ss"));
         LocalTime fechaFin = LocalTime.parse(horaSalida, DateTimeFormatter.ofPattern("HH:mm:ss"));
         Duration duracion = Duration.between(fechaInicio, fechaFin);
-        
+
         long dias = duracion.toDays();
-        long horas = duracion.toHours() % 24; 
+        long horas = duracion.toHours() % 24;
         long minutos = duracion.toMinutes() % 60;
-    	for (Tarifa tarifa : tarifas) {
-			
-		}
-    	
-    	return 0.0;
+
+        double costoTotal = 0.0;
+
+        
+        if (dias > 0) {
+            Tarifa tarifaDia = tarifas.stream()
+                    .filter(t -> t.getTipo() == 'D')
+                    .findFirst()
+                    .orElse(null);
+            if (tarifaDia != null) {
+                costoTotal += dias * tarifaDia.getCosto();
+            }
+        }
+
+
+        if (horas > 0) {
+            Tarifa tarifaHora = tarifas.stream()
+                    .filter(t -> t.getTipo() == 'H' && t.getTiempo() == 1)
+                    .findFirst()
+                    .orElse(null);
+            if (tarifaHora != null) {
+                costoTotal += horas * tarifaHora.getCosto();
+            }
+        }
+
+
+        if (minutos > 0) {
+            Tarifa tarifaMinuto = tarifas.stream()
+                    .filter(t -> t.getTipo() == 'm' && t.getTiempo() == 30)
+                    .findFirst()
+                    .orElse(null);
+            if (tarifaMinuto != null) {
+                costoTotal += (minutos / 30.0) * tarifaMinuto.getCosto();
+            }
+        }
+
+        return costoTotal;
     }
     
 }

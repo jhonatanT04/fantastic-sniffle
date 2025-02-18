@@ -99,24 +99,11 @@ public class PersonasService {
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response read(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
+    public Response read(@PathParam("id") int id) {
         try {
         	
         	
-        	String token = authHeader.substring("Bearer".length()).trim();
-            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
-            Claims claims;
-            try {
-                claims = Jwts.parser()
-                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-            } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
-            }
+        	
         	
         	
         	

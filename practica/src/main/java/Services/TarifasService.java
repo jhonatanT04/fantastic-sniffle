@@ -31,23 +31,8 @@ public class TarifasService {
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(@HeaderParam("Authorization") String authHeader,Tarifa tarifa) {
+    public Response create(Tarifa tarifa) {
         try {
-        	
-        	String token = authHeader.substring("Bearer".length()).trim();
-            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
-            Claims claims;
-            try {
-                claims = Jwts.parser()
-                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-            } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
-            }
         	
         	if(tarifa.getTipo()=='m') {
         		if(tarifa.getTiempo()>59) {
@@ -79,23 +64,8 @@ public class TarifasService {
     @PUT
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@HeaderParam("Authorization") String authHeader,Tarifa tarifa) {
+    public Response update(Tarifa tarifa) {
         try {
-        	
-        	String token = authHeader.substring("Bearer".length()).trim();
-            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
-            Claims claims;
-            try {
-                claims = Jwts.parser()
-                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-            } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
-            }
         	
             if (tarifa != null && tarifa.getId() != 0) {
                 gTarifas.modificarTarifa(tarifa);

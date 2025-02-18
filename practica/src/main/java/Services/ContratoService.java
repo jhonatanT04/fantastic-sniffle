@@ -208,26 +208,8 @@ public class ContratoService {
 	@PUT
     @Path("/reserva/{id}")
     @Produces("application/json")
-    public Response actualizarEspacio(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
+    public Response actualizarEspacio(@PathParam("id") int id) {
         try {
-        	
-        	String token = authHeader.substring("Bearer".length()).trim();
-            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
-            Claims claims;
-            try {
-                claims = Jwts.parser()
-                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-            } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
-            }
-        	
-        	
-        	
             Contrato contratoFinalizado = gestionContrato.actualizarEspacio(id); 
             
             if (contratoFinalizado == null) {
@@ -244,26 +226,8 @@ public class ContratoService {
 	@PUT
     @Path("/reservaeliminar/{id}")
     @Produces("application/json")
-    public Response actualizarEspacioalEliminar(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
+    public Response actualizarEspacioalEliminar(@PathParam("id") int id) {
         try {
-        	
-        	String token = authHeader.substring("Bearer".length()).trim();
-            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
-            Claims claims;
-            try {
-                claims = Jwts.parser()
-                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-            } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
-            }
-        	
-        	
-        	
             Contrato contratoFinalizado = gestionContrato.actualizarEspacioalEliminar(id); 
             
             if (contratoFinalizado == null) {

@@ -113,16 +113,15 @@ public class TicketDAO {
         return resultados;
     }
     
-    public Ticket validarPlacaConTicketActivo(String placa) {
+    public boolean validarPlacaConTicketActivo(String placa) {
         TypedQuery<Ticket> query = em.createQuery(
             "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
         query.setParameter("placa", placa);
         
         List<Ticket> resultados = query.getResultList();
         
-        return resultados.isEmpty() ? null : resultados.get(0); 
+        return !resultados.isEmpty(); 
     }
-
     
     public void eliminarTicket(int id) {
         Ticket ticket = em.find(Ticket.class, id);

@@ -19,6 +19,11 @@ public class ContratoDAO {
 	@Inject
 	private EspacioDAO espacioDAO;
 	
+	@Inject
+	private TicketDAO ticketDAO;
+	
+	
+	
 	public void agregarContrato(Contrato contrato) {
 	    em.persist(contrato);;
 	}

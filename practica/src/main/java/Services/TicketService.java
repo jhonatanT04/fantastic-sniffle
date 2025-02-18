@@ -35,7 +35,7 @@ public class TicketService {
     
     @Inject
     private GestionContratos gContratos;
-    
+
     @Inject
     private GestionHorarios gestionHorarios;
     @POST

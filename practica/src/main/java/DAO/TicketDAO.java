@@ -53,27 +53,42 @@ public class TicketDAO {
     }	
     
     public Ticket salidaTicket(String placa) {
-    	placa.toUpperCase();
+        if (placa == null || placa.isEmpty()) {
+            return null; 
+        }
+
+        placa = placa.toUpperCase(); 
         TypedQuery<Ticket> query = em.createQuery(
                 "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
-            query.setParameter("placa", placa);
-            List<Ticket> resultados = query.getResultList();
+        query.setParameter("placa", placa);
+        
+        List<Ticket> resultados = query.getResultList();
         Ticket ticket = resultados.isEmpty() ? null : resultados.get(0);
-        if (ticket!=null) {
-        	ticket.setValorTotal(10.2);
-        	
-        	LocalDateTime ahora = LocalDateTime.now();
-            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        	
-            ticket.setFechaSalida(ahora.format(formato));
+        
+        if (ticket != null) {
+            LocalDateTime ahora = LocalDateTime.now();
+            DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+            ticket.setFechaSalida(ahora.format(formatoFechaHora)); 
+            
+
+            String horaEntrada = ticket.getFechaIngreso().split(" ")[1]; 
+            String horaSalida = ahora.format(formatoHora);
+
+
+            double valorTotal = tarifaDAO.consultaValorApagar(horaEntrada, horaSalida);
+            ticket.setValorTotal(valorTotal);
+
+
             Espacio espacio = ticket.getEspacio();
             espacio.setEstado("D");
             espacioDAO.modificarEspacio(espacio);
-            ticket.setValorTotal(tarifaDAO.consultaValorApagar(ticket.getFechaIngreso(), ticket.getFechaSalida()));	
-		}
-        return em.merge(ticket);
+        }
+        
+        return (ticket != null) ? em.merge(ticket) : null;
     }
-    
+
     public Ticket entradaTicket(String placa) {
     	placa.toUpperCase();
         TypedQuery<Ticket> query = em.createQuery(
@@ -131,14 +146,11 @@ public class TicketDAO {
             em.remove(ticket);
         }
     }
-    
-    public Ticket modificarTicket(Ticket ticket) {
-        return em.merge(ticket);
-    }
-    
     public List<Ticket> listarTicketsActivos() {
         return em.createQuery("SELECT t FROM Ticket t WHERE t.fechaSalida IS NULL", Ticket.class)
                  .getResultList();
     }
-
+    public Ticket modificarTicket(Ticket ticket) {
+        return em.merge(ticket);
+    }
 }

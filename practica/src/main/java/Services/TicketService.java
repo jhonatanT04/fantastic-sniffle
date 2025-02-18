@@ -198,8 +198,12 @@ public class TicketService {
     @Path("/validarPlaca/{placa}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response validarPlaca(@PathParam("placa") String placa) {
-        boolean tieneTicket = gTickets.validarPlacaConTicketActiva(placa);
-        return Response.ok(tieneTicket).build();
+        try {
+        	Ticket tieneTicket = gTickets.validarPlacaConTicketActiva(placa);
+            return Response.ok(tieneTicket).build();
+        }catch (Exception e) {
+        	 e.printStackTrace();
+             return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al listar los ticket")).build();		}
     }
 
 }

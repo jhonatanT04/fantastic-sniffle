@@ -13,6 +13,7 @@ import jakarta.mail.internet.*;
 import ups.practica.*;
 import DAO.HorarioDAO;
 import DAO.PersonaDAO;
+import DAO.TicketDAO;
 import DAO.ContratoDAO;
 
 @Singleton
@@ -27,6 +28,9 @@ public class NotificacionService {
 
     @Inject
     private ContratoDAO contratoDAO;
+    
+    @Inject
+    private TicketDAO ticketDAO;
 
     private Timer timer = new Timer();
 
@@ -48,11 +52,11 @@ public class NotificacionService {
     }
 
     public void verificarHorariosYNotificar() {
-        System.out.println("🔎 Verificando horarios para notificaciones...");
+        System.out.println("Verificando horarios para notificaciones...");
 
         Horario horarioHoy = horarioDAO.getHorarioDelDia();
         if (horarioHoy == null) {
-            System.out.println("⚠️ No hay horario definido para hoy.");
+            System.out.println("No hay horario definido para hoy.");
             return;
         }
 
@@ -62,6 +66,9 @@ public class NotificacionService {
         List<Persona> clientes = personaDAO.listarPersona();
 
         List<Contrato> contratosActivos = contratoDAO.listarContrato();
+        
+        List<Ticket> ticketsActivos = ticketDAO.listarTicketsActivos(); 
+
 
         java.time.LocalTime ahora = java.time.LocalTime.now();
         String horaActual = ahora.toString().substring(0, 5);
@@ -75,6 +82,11 @@ public class NotificacionService {
         if (horaCierre != null && ahora.plusMinutes(15).toString().substring(0, 5).equals(horaCierre)) {
             for (Contrato contrato : contratosActivos) {
                 Persona cliente = contrato.getUsuario();
+                enviarCorreoCierre(cliente.getEmail(), cliente.getNombre(), horaCierre);
+            }
+            
+            for (Ticket ticket : ticketsActivos) {
+                Persona cliente = ticket.getUsuario();
                 enviarCorreoCierre(cliente.getEmail(), cliente.getNombre(), horaCierre);
             }
         }

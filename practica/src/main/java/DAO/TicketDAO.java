@@ -146,7 +146,10 @@ public class TicketDAO {
             em.remove(ticket);
         }
     }
-    
+    public List<Ticket> listarTicketsActivos() {
+        return em.createQuery("SELECT t FROM Ticket t WHERE t.fechaSalida IS NULL", Ticket.class)
+                 .getResultList();
+    }
     public Ticket modificarTicket(Ticket ticket) {
         return em.merge(ticket);
     }

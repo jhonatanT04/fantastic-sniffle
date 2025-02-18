@@ -28,6 +28,25 @@ public class TarifasService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Tarifa tarifa) {
         try {
+        	if(tarifa.getTipo()=='m') {
+        		if(tarifa.getTiempo()>59) {
+        			return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "El tiempo de ser menor a 59 minutos")).build();
+        		}
+        	}else if(tarifa.getTipo()=='H') {
+        		if(tarifa.getTiempo()>24) {
+        			return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "El tiempo de ser menor a 24 horas")).build();
+        		}
+        	}else if(tarifa.getTipo()=='D') {
+        		if(tarifa.getTiempo()>24) {
+        			return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "El tiempo de ser menor a 30 dias")).build();
+        		}
+        	}else if(tarifa.getTipo()=='M') {
+        		if(tarifa.getTiempo()>24) {
+        			return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "El tiempo de ser menor a 12 meses")).build();
+        		}
+        	}else {
+        		return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Datos erroneos")).build();
+        	}
             gTarifas.agregarTarifa(tarifa);
             return Response.ok(tarifa).build();
         } catch (Exception e) {

@@ -3,6 +3,7 @@ package Services;
 import java.util.List;
 
 import Gestion.GestionContratos;
+import Gestion.GestionTickets;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -22,12 +23,23 @@ public class ContratoService {
 	@Inject
 	private GestionContratos gestionContrato;
 	
+	@Inject
+	private GestionTickets gestionTickets;
+	
 	@POST 
 	@Produces("application/json")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createContrato(Contrato contrato) { 
 		try {
 			String a = contrato.getPlaca().toUpperCase();
+			
+			if(gestionTickets.buscarTicketPendientePorPlaca(a)!=null) {
+				return Response.status(503).entity(new Respuesta(Respuesta.ERROR,"Placa asociada a un ticket")).build();
+			}
+			if(gestionContrato.BuscarContratoPorPlaca(a)!=null) {
+				return Response.status(503).entity(new Respuesta(Respuesta.ERROR,"Placa asociada a un contratos")).build();
+			}
+			
         	contrato.setPlaca(a);
 			gestionContrato.agregarContrato(contrato);
 			return Response.ok(contrato).build();

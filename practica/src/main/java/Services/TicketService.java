@@ -1,8 +1,12 @@
 package Services;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import Gestion.GestionContratos;
+import Gestion.GestionHorarios;
 import Gestion.GestionTickets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -32,16 +36,29 @@ public class TicketService {
     @Inject
     private GestionContratos gContratos;
 
+    @Inject
+    private GestionHorarios gestionHorarios;
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(@HeaderParam("Authorization") String authHeader,Ticket ticket) {
         try {
+        	LocalTime ahora = LocalTime.now();
+        	DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
+            String horaActualSistem  = ahora.format(formato);
+            LocalTime horaActual =LocalTime.parse(horaActualSistem, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        	LocalTime horaApertura = LocalTime.parse(gestionHorarios.getHorarioDia().getHoraApertura(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+            LocalTime horaCierre = LocalTime.parse(gestionHorarios.getHorarioDia().getHoraCierre(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+            
+            if (horaActual.isBefore(horaApertura) || horaActual.isAfter(horaCierre)) {
+            	return Response.status(501).entity(new Respuesta(Respuesta.ERROR, "El parqueadero se encuentra cerrado")).build();
+            }
+        	
         	String a = ticket.getPlaca().toUpperCase();
         	ticket.setPlaca(a);
         	
             if(gTickets.buscarTicketPendientePorPlaca( ticket.getPlaca() ) != null||gContratos.BuscarContratoPorPlaca( ticket.getPlaca() ) != null) {
-            	return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Número de placa ya tiene un ticket/contrato asociado")).build();
+            	return Response.status(501).entity(new Respuesta(Respuesta.ERROR, "Número de placa ya tiene un ticket/contrato asociado")).build();
         	}
             
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {

@@ -1,5 +1,8 @@
 package DAO;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import jakarta.ejb.Stateless;
@@ -41,4 +44,22 @@ public class TarifaDAO {
         TypedQuery<Tarifa> query = em.createQuery("SELECT t FROM Tarifa t", Tarifa.class);
         return query.getResultList();
     }
+    
+    public double consultaValorApagar(String horaEntrada,String horaSalida) {
+    	List<Tarifa> tarifas = this.listarTarifa();
+    	
+    	LocalTime fechaInicio = LocalTime.parse(horaEntrada, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LocalTime fechaFin = LocalTime.parse(horaSalida, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        Duration duracion = Duration.between(fechaInicio, fechaFin);
+        
+        long dias = duracion.toDays();
+        long horas = duracion.toHours() % 24; 
+        long minutos = duracion.toMinutes() % 60;
+    	for (Tarifa tarifa : tarifas) {
+			
+		}
+    	
+    	return 0.0;
+    }
+    
 }

@@ -15,7 +15,10 @@ public class Tarifa {
 	private int id;
 	
 	@Column(name="tiempo")
-    private String tiempo;
+    private int tiempo;
+	
+	@Column(name="tipo")
+    private char tipo; //m: minutos H:horas D:Dias M:meses 
 	
 	@Column(name="costo")
     private double costo;
@@ -28,15 +31,23 @@ public class Tarifa {
         this.id = id;
     }
 
-    public String getTiempo() {
-        return tiempo;
-    }
+    public int getTiempo() {
+		return tiempo;
+	}
 
-    public void setTiempo(String tiempo) {
-        this.tiempo = tiempo;
-    }
+	public void setTiempo(int tiempo) {
+		this.tiempo = tiempo;
+	}
 
-    public double getCosto() {
+	public char getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(char tipo) {
+		this.tipo = tipo;
+	}
+
+	public double getCosto() {
         return costo;
     }
 

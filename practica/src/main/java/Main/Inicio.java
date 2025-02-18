@@ -101,24 +101,29 @@ public class Inicio {
 		List<Tarifa> listaTarifas = new ArrayList<>();
 
 		Tarifa tarifa1 = new Tarifa();
-		tarifa1.setTiempo("30 minutos");
+		tarifa1.setTiempo(30);
+		tarifa1.setTipo('m');
 		tarifa1.setCosto(0.50);
 
 		Tarifa tarifa2 = new Tarifa();
-		tarifa2.setTiempo("1 hora");
+		tarifa2.setTiempo(1);
+		tarifa2.setTipo('H');
 		tarifa2.setCosto(1.00);
 
 		Tarifa tarifa5 = new Tarifa();
-		tarifa5.setTiempo("8 horas");
+		tarifa5.setTiempo(8);
+		tarifa5.setTipo('H');
 		tarifa5.setCosto(6.00);
 
 
 		Tarifa tarifa7 = new Tarifa();
-		tarifa7.setTiempo("Dia");
+		tarifa7.setTiempo(1);
+		tarifa7.setTipo('D');
 		tarifa7.setCosto(12.00);
 
 		Tarifa tarifa9 = new Tarifa();
-		tarifa9.setTiempo("Mensual");
+		tarifa9.setTiempo(1);
+		tarifa9.setTipo('M');
 		tarifa9.setCosto(40.00);
 
 		listaTarifas.add(tarifa1);
@@ -151,8 +156,8 @@ public class Inicio {
         for (String dia : diasSemana) {
             Horario horario = new Horario();
             horario.setDia(dia);
-            horario.setHoraApertura("08:00");
-            horario.setHoraCierre("18:00");
+            horario.setHoraApertura("08:00:00");
+            horario.setHoraCierre("18:00:00");
             horario.setTipoHorario("Normal");
             daoHorario.agregarHorario(horario);
         }

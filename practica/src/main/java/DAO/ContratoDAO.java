@@ -19,19 +19,8 @@ public class ContratoDAO {
 	@Inject
 	private EspacioDAO espacioDAO;
 	
-	@Inject
-	private TicketDAO ticketDAO;
-	
-	
-	
-	public Contrato agregarContrato(Contrato contrato) {
-	    if (ticketDAO.validarPlacaConTicketActivo(contrato.getPlaca())) {
-	        throw new IllegalStateException("⚠️ No se puede registrar el contrato: La placa " 
-	            + contrato.getPlaca() + " tiene un ticket activo.");
-	    }
-
-	    em.persist(contrato);
-	    return contrato;
+	public void agregarContrato(Contrato contrato) {
+	    em.persist(contrato);;
 	}
 
 	

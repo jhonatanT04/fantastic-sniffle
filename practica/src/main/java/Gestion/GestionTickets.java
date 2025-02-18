@@ -56,7 +56,7 @@ public class GestionTickets {
         return ticketDAO.modificarTicket(ticket);
     }
     
-    public boolean validarPlacaConTicketActiva(String placa) {
+    public Ticket validarPlacaConTicketActiva(String placa) {
     	return ticketDAO.validarPlacaConTicketActivo(placa);
     }
 

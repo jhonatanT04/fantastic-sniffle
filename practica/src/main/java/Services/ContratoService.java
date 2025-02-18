@@ -4,10 +4,15 @@ import java.util.List;
 
 import Gestion.GestionContratos;
 import Gestion.GestionTickets;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -29,7 +34,7 @@ public class ContratoService {
 	@POST 
 	@Produces("application/json")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createContrato(Contrato contrato) { 
+	public Response createContrato(@HeaderParam("Authorization") String authHeader,Contrato contrato) { 
 		try {
 			String a = contrato.getPlaca().toUpperCase();
 			
@@ -52,8 +57,25 @@ public class ContratoService {
 	@PUT
 	@Produces("application/json")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateContrato(Contrato contrato) {
+	public Response updateContrato(@HeaderParam("Authorization") String authHeader,Contrato contrato) {
 		try {
+			
+			String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+			
+			
 			gestionContrato.modificarContrato(contrato);
 			return Response.ok(contrato).build();
 		} catch (Exception e) {
@@ -64,8 +86,25 @@ public class ContratoService {
 	
 	@GET
 	@Produces("application/json")
-	public Response listContratos(){
+	public Response listContratos(@HeaderParam("Authorization") String authHeader){
 		try {
+			
+			String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+			
+			
 			List<Contrato> listContrato = gestionContrato.listHorario();
 			return Response.ok(listContrato).build();
 		} catch (Exception e) {
@@ -77,8 +116,26 @@ public class ContratoService {
 	@GET
 	@Path("/contrato/{id}")
 	@Produces("application/json")
-	public Response buscarContratoIdPersona(@PathParam("id") int id){
+	public Response buscarContratoIdPersona(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id){
 		try {
+			
+			String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+			
+			
+			
 			List<Contrato> listContrato = gestionContrato.buscarContratosIdPersona(id);
 			return Response.ok(listContrato).build();
 		} catch (Exception e) {
@@ -90,8 +147,26 @@ public class ContratoService {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getContrato(@PathParam("id") int id) {
+	public Response getContrato(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
 		try {
+			
+			String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+			
+			
+			
 			Contrato contrato = gestionContrato.readContrato(id);
 			return Response.ok(contrato).build();
 		} catch (Exception e) {
@@ -102,8 +177,26 @@ public class ContratoService {
 	
 	@DELETE
 	@Path("/deletePersona/{id}")
-	public Response deleteContrato(@PathParam("id") int id) {
+	public Response deleteContrato(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
 		try {
+			
+			String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+			
+			
+			
 			gestionContrato.eliminarContrato(id);
 			return Response.ok().build();
 		} catch (Exception e) {
@@ -115,8 +208,26 @@ public class ContratoService {
 	@PUT
     @Path("/reserva/{id}")
     @Produces("application/json")
-    public Response actualizarEspacio(@PathParam("id") int id) {
+    public Response actualizarEspacio(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
             Contrato contratoFinalizado = gestionContrato.actualizarEspacio(id); 
             
             if (contratoFinalizado == null) {
@@ -133,8 +244,26 @@ public class ContratoService {
 	@PUT
     @Path("/reservaeliminar/{id}")
     @Produces("application/json")
-    public Response actualizarEspacioalEliminar(@PathParam("id") int id) {
+    public Response actualizarEspacioalEliminar(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
             Contrato contratoFinalizado = gestionContrato.actualizarEspacioalEliminar(id); 
             
             if (contratoFinalizado == null) {
@@ -151,8 +280,26 @@ public class ContratoService {
 	@PUT
 	@Path("/finalizar/{id}")
 	@Produces("application/json")
-	public Response finalizarContrato(@PathParam("id") int id) {
+	public Response finalizarContrato(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
 		try {
+			
+			String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+			
+			
+			
 			boolean finalizado = gestionContrato.finalizarContrato(id);
 
 			if (!finalizado) {

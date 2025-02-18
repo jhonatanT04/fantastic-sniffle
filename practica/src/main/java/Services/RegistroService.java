@@ -7,10 +7,15 @@ import java.util.List;
 import Gestion.GestionContratos;
 import Gestion.GestionRegistros;
 import Gestion.GestionTickets;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -38,8 +43,28 @@ public class RegistroService {
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(Registro registro) {
+    public Response create(@HeaderParam("Authorization") String authHeader,Registro registro) {
         try {
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
+        	
+        	
+        	
         	String a = registro.getPlaca().toUpperCase();
         	registro.setPlaca(a);
         	
@@ -71,8 +96,26 @@ public class RegistroService {
     @PUT
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(Registro registro) {
+    public Response update(@HeaderParam("Authorization") String authHeader,Registro registro) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
             gRegistros.modificarRegistro(registro);            
             return Response.ok(registro).build();
         } catch (Exception e) {
@@ -86,8 +129,31 @@ public class RegistroService {
     @Path("/salidaVehiculo")
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response salidaVehiculo(Registro registro) {
+    public Response salidaVehiculo(@HeaderParam("Authorization") String authHeader,Registro registro) {
         try {
+        	
+        	
+        	
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
+        	
+        	
         	Registro reg = gRegistros.buscarRegistroPendientePorPlaca(registro.getPlaca());
         	LocalDateTime fechaHora = LocalDateTime.now();
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -107,8 +173,28 @@ public class RegistroService {
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response read(@PathParam("id") int id) {
+    public Response read(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	
+        	
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
             Registro registro = gRegistros.buscarRegistro(id);
             if (registro == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -122,8 +208,29 @@ public class RegistroService {
 
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
+        	
+        	
             gRegistros.eliminarRegistro(id);
             return Response.ok(new Respuesta(Respuesta.OK, "Registro eliminado con éxito")).build();
         } catch (Exception e) {
@@ -135,8 +242,27 @@ public class RegistroService {
     @GET
     @Path("/historial")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtenerHistorialPorPeriodo(@QueryParam("periodo") String periodo) {
+    public Response obtenerHistorialPorPeriodo(@HeaderParam("Authorization") String authHeader,@QueryParam("periodo") String periodo) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
+        	
             List<Registro> historial = gRegistros.obtenerHistorial(periodo);
             return Response.ok(historial).build();
         } catch (Exception e) {
@@ -148,8 +274,29 @@ public class RegistroService {
     @GET
     @Path("/parqueadero")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtenerVehiculosEnParqueadero() {
+    public Response obtenerVehiculosEnParqueadero(@HeaderParam("Authorization") String authHeader) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
+        	
+        	
+        	
             List<Registro> vehiculos = gRegistros.listarEnParqueadero();
             return Response.ok(vehiculos).build();
         } catch (Exception e) {

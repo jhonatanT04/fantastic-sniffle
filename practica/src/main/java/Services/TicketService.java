@@ -74,14 +74,16 @@ public class TicketService {
                         .parseClaimsJws(token)
                         .getBody();
             } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Token expirado").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
             } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Error al validar el token").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
             }
             
             Integer id = claims.get("id", Integer.class);
             
-            
+            if(id!=ticket.getUsuario().getId()) {
+            	return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Acceso denegado")).build();
+            }
             
             if(gTickets.buscarTicketPendientePorPersona(id).size() > 2) {
             	return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Existen Tickets pendientes")).build();
@@ -99,8 +101,23 @@ public class TicketService {
     @PUT
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(Ticket ticket) {
+    public Response update(@HeaderParam("Authorization") String authHeader,Ticket ticket) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
             if (ticket != null && ticket.getId() != 0) {
                 gTickets.modificarTicket(ticket);
                 return Response.ok(new Respuesta(Respuesta.OK, "Ticket actualizado con éxito")).build();
@@ -117,8 +134,22 @@ public class TicketService {
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response read(@PathParam("id") int id) {
+    public Response read(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
             Ticket ticket = gTickets.buscarTicket(id);
             if (ticket == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -134,8 +165,22 @@ public class TicketService {
     @GET
     @Path("/ticketPendiente/{placa}")
     @Produces("application/json")
-    public Response buscarPorPlacaTicketsPendientes(@PathParam("placa") String placa) {
+    public Response buscarPorPlacaTicketsPendientes(@HeaderParam("Authorization") String authHeader,@PathParam("placa") String placa) {
         try {
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
             Ticket ticket = gTickets.buscarTicketPendientePorPlaca(placa);
             
             if (ticket == null) {
@@ -153,8 +198,22 @@ public class TicketService {
     @Path("/cambiarEstado")
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response cambiarEstadoDeTicket(Ticket request) {
+    public Response cambiarEstadoDeTicket(@HeaderParam("Authorization") String authHeader,Ticket request) {
         try {
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
             if (request != null && request.getPlaca() != null && !request.getPlaca().isEmpty()) {
                 gTickets.salidaTicket(request.getPlaca());
                 return Response.ok(new Respuesta(Respuesta.OK, "Ticket actualizado con éxito")).build();
@@ -170,9 +229,25 @@ public class TicketService {
     @GET
     @Path("/getTicketIDpersona/{id}")
     @Produces("application/json")
-    public Response getTicketPersona(@PathParam("id") int id) {
+    public Response getTicketPersona(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
-            List<Ticket> tickets = gTickets.ListarTicketpotPersona(id);
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	List<Ticket> tickets = gTickets.ListarTicketpotPersona(id);
+            
             if (tickets == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
@@ -186,8 +261,24 @@ public class TicketService {
     
     @GET
     @Produces("application/json")
-    public Response listar() {
+    public Response listar(@HeaderParam("Authorization") String authHeader) {
         try {
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
         	List<Ticket> listaHorarios = gTickets.listarTickets();
             if (listaHorarios == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -201,8 +292,25 @@ public class TicketService {
     
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }        	
+        	
+        	
             gTickets.eliminarTicket(id);
             return Response.ok(new Respuesta(Respuesta.OK, "Ticket eliminado con éxito")).build();
         } catch (Exception e) {
@@ -214,8 +322,25 @@ public class TicketService {
     @GET
     @Path("/validarPlaca/{placa}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response validarPlaca(@PathParam("placa") String placa) {
+    public Response validarPlaca(@HeaderParam("Authorization") String authHeader,@PathParam("placa") String placa) {    	
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
         	Ticket tieneTicket = gTickets.validarPlacaConTicketActiva(placa);
             return Response.ok(tieneTicket).build();
         }catch (Exception e) {

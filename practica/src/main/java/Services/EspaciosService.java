@@ -4,6 +4,7 @@ import java.util.List;
 
 import Gestion.GestionEspacios;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.inject.Inject;
@@ -67,8 +68,26 @@ public class EspaciosService {
     @PUT
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(Espacio espacio) {
+    public Response update(@HeaderParam("Authorization") String authHeader,Espacio espacio) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
             if (espacio != null && espacio.getId() != 0) {
                 gEspacios.modificarEspacio(espacio);
                 return Response.ok(new Respuesta(Respuesta.OK, "Espacio Actualizado")).build();
@@ -83,8 +102,27 @@ public class EspaciosService {
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response read(@PathParam("id") int id) {
+    public Response read(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
+        	
             Espacio espacio = gEspacios.encontrarEspacio(id);
             if (espacio == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -98,8 +136,27 @@ public class EspaciosService {
 
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@HeaderParam("Authorization") String authHeader,@PathParam("id") int id) {
         try {
+        	
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+        	
+        	
+        	
+        	
             gEspacios.eliminarEspacio(id);
             return Response.ok(new Respuesta(Respuesta.OK, "Espacio eliminado con éxito")).build();
         } catch (Exception e) {

@@ -135,4 +135,10 @@ public class TicketDAO {
     public Ticket modificarTicket(Ticket ticket) {
         return em.merge(ticket);
     }
+    
+    public List<Ticket> listarTicketsActivos() {
+        return em.createQuery("SELECT t FROM Ticket t WHERE t.fechaSalida IS NULL", Ticket.class)
+                 .getResultList();
+    }
+
 }

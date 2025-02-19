@@ -1,4 +1,4 @@
-package ups.practica;
+	package ups.practica;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +32,7 @@ public class Ticket {
 	@Column(name="valorTotal")
 	private double valorTotal;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="id_espacio")
 	private Espacio espacio;
 	

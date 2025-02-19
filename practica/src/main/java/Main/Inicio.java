@@ -22,30 +22,30 @@ import ups.practica.*;
 @Singleton
 @Startup
 public class Inicio {
-	//@Inject
-	//private HorarioDAO daoHoraio;
+	/*@Inject
+	private HorarioDAO daoHoraio;
 	
-	//@Inject
-	///private PersonaDAO daoPersona ;
+	@Inject
+	private PersonaDAO daoPersona ;
 	
-	//@Inject
-    //private TarifaDAO daoTarifa;  
+	@Inject
+    private TarifaDAO daoTarifa;  
 
-    //@Inject
-    //private EspacioDAO daoEspacio;
+    @Inject
+    private EspacioDAO daoEspacio;
     
-    //@Inject
-    //private HorarioDAO daoHorario;
+    @Inject
+    private HorarioDAO daoHorario;
     
-    //@Inject
-    //private ContratoDAO contratoDAO;
+    @Inject
+    private ContratoDAO contratoDAO;*/
     
     @Inject
     private NotificacionService notificacionService;
 	@PostConstruct
 	public void init() {
-		//System.out.println("Hola mundo EJB");
-		//Horario hor = new Horario();
+		System.out.println("Hola mundo EJB");
+		Horario hor = new Horario();
 		notificacionService.verificarHorariosYNotificar();
 		//contratoDAO.revisarYFinalizarContratos();
 		/*hor.setDia("Jueves");
@@ -55,13 +55,13 @@ public class Inicio {
 		
 		//daoHoraio.listarHorario();
 		
-		//for (Horario horario: daoHoraio.listarHorario()) {
-			//System.out.println(horario);
+		/*for (Horario horario: daoHoraio.listarHorario()) {
+			System.out.println(horario);
 		} 
 		
 		
 		
-		/*Persona per = new Persona();
+		Persona per = new Persona();
 		per.setEmail("admin@example.com");
 		per.setPassword("admin123");
 		per.setApellido("Lucero");
@@ -156,8 +156,8 @@ public class Inicio {
         for (String dia : diasSemana) {
             Horario horario = new Horario();
             horario.setDia(dia);
-            horario.setHoraApertura("08:00:00");
-            horario.setHoraCierre("18:00:00");
+            horario.setHoraApertura("08:00");
+            horario.setHoraCierre("18:00");
             horario.setTipoHorario("Normal");
             daoHorario.agregarHorario(horario);
         }
@@ -180,8 +180,7 @@ public class Inicio {
 
         for (Horario h : horariosEspeciales) {
             daoHorario.agregarHorario(h);
-        }
+        }*/
 		
-	}*/
+	}
 }
-

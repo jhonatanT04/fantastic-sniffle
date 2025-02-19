@@ -44,13 +44,12 @@ public class TicketService {
     public Response create(@HeaderParam("Authorization") String authHeader,Ticket ticket) {
         try {
         	LocalTime ahora = LocalTime.now();
-        	DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm:ss");
+        	DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm");
             String horaActualSistem  = ahora.format(formato);
-            LocalTime horaActual =LocalTime.parse(horaActualSistem, DateTimeFormatter.ofPattern("HH:mm:ss"));
-        	LocalTime horaApertura = LocalTime.parse(gestionHorarios.getHorarioDia().getHoraApertura(), DateTimeFormatter.ofPattern("HH:mm:ss"));
-            LocalTime horaCierre = LocalTime.parse(gestionHorarios.getHorarioDia().getHoraCierre(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+            LocalTime horaActual =LocalTime.parse(horaActualSistem, DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime horaCierre = LocalTime.parse(gestionHorarios.getHorarioDia().getHoraCierre(), DateTimeFormatter.ofPattern("HH:mm"));
             
-            if (horaActual.isBefore(horaApertura) || horaActual.isAfter(horaCierre)) {
+            if (horaActual.isAfter(horaCierre)) {
             	return Response.status(501).entity(new Respuesta(Respuesta.ERROR, "El parqueadero se encuentra cerrado")).build();
             }
         	

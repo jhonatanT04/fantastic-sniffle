@@ -67,8 +67,8 @@ public class TicketDAO {
         
         if (ticket != null) {
             LocalDateTime ahora = LocalDateTime.now();
-            DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
+            DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 
             ticket.setFechaSalida(ahora.format(formatoFechaHora)); 
             
@@ -100,7 +100,7 @@ public class TicketDAO {
         	
         	
         	LocalDateTime ahora = LocalDateTime.now();
-            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         	ticket.setFechaIngreso(ahora.format(formato));
             Espacio espacio = ticket.getEspacio();
             espacio.setEstado("O");

@@ -48,8 +48,8 @@ public class TarifaDAO {
     public double consultaValorApagar(String horaEntrada, String horaSalida) {
         List<Tarifa> tarifas = this.listarTarifa();
 
-        LocalTime fechaInicio = LocalTime.parse(horaEntrada, DateTimeFormatter.ofPattern("HH:mm:ss"));
-        LocalTime fechaFin = LocalTime.parse(horaSalida, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LocalTime fechaInicio = LocalTime.parse(horaEntrada, DateTimeFormatter.ofPattern("HH:mm"));
+        LocalTime fechaFin = LocalTime.parse(horaSalida, DateTimeFormatter.ofPattern("HH:mm"));
         Duration duracion = Duration.between(fechaInicio, fechaFin);
 
         long dias = duracion.toDays();

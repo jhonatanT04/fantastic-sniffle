@@ -31,26 +31,8 @@ public class PersonasService {
     @POST
     @Produces("application/json")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(@HeaderParam("Authorization") String authHeader,Persona persona) {
+    public Response create(Persona persona) {
         try {
-        	
-        	String token = authHeader.substring("Bearer".length()).trim();
-            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
-            Claims claims;
-            try {
-                claims = Jwts.parser()
-                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-            } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
-            }
-        	
-        	
-        	
             gPersonas.agregarPersona(persona);
             return Response.ok(persona).build();
         } catch (Exception e) {
@@ -188,58 +170,7 @@ public class PersonasService {
 		}
     }
     
-    @GET
-    @Path("/getPersona/{email}")
-    @Consumes("application/json")
-    @Produces("application/json")
-    public Response readEmail(@HeaderParam("Authorization") String authHeader, @PathParam("email") String email) {
-        try {
-
-            
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Token no proporcionado").build();
-            }
-
-            
-            String token = authHeader.substring("Bearer".length()).trim();
-            String secretKey = System.getenv("JWT_SECRET_KEY"); 
-            
-            
-            Claims claims;
-            try {
-                claims = Jwts.parser()
-                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-            } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Token expirado").build();
-            } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity("Error al validar el token").build();
-            }
-
-            Integer id = claims.get("id", Integer.class);
-            String emailFromToken = claims.getSubject();  
-            if (!emailFromToken.equals(email)) {
-                return Response.status(Response.Status.FORBIDDEN).entity("Acceso denegado").build();
-            }
-            
-            System.out.println("Persona "+id+" email "+emailFromToken );
-            
-            Persona persona = gPersonas.buscarPersonaEmail(email);
-            if (persona == null) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Persona no encontrada").build();
-            }
-
-            return Response.ok(persona).build();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new Respuesta(Respuesta.ERROR, "Error al buscar la persona"))
-                    .build();
-        }
-    }
+    
         @GET
         @Path("/getDatosPersonales")
         @Consumes("application/json")

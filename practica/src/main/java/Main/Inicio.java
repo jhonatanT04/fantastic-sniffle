@@ -22,46 +22,46 @@ import ups.practica.*;
 @Singleton
 @Startup
 public class Inicio {
-	@Inject
-	private HorarioDAO daoHoraio;
+	//@Inject
+	//private HorarioDAO daoHoraio;
 	
-	@Inject
-	private PersonaDAO daoPersona ;
+	//@Inject
+	///private PersonaDAO daoPersona ;
 	
-	@Inject
-    private TarifaDAO daoTarifa;  
+	//@Inject
+    //private TarifaDAO daoTarifa;  
 
-    @Inject
-    private EspacioDAO daoEspacio;
+    //@Inject
+    //private EspacioDAO daoEspacio;
     
-    @Inject
-    private HorarioDAO daoHorario;
+    //@Inject
+    //private HorarioDAO daoHorario;
     
-    @Inject
-    private ContratoDAO contratoDAO;
+    //@Inject
+    //private ContratoDAO contratoDAO;
     
     @Inject
     private NotificacionService notificacionService;
 	@PostConstruct
 	public void init() {
-		System.out.println("Hola mundo EJB");
-		Horario hor = new Horario();
+		//System.out.println("Hola mundo EJB");
+		//Horario hor = new Horario();
 		notificacionService.verificarHorariosYNotificar();
-		contratoDAO.revisarYFinalizarContratos();
+		//contratoDAO.revisarYFinalizarContratos();
 		/*hor.setDia("Jueves");
 		hor.setHoraApertura("12:00");
 		hor.setHoraCierre("20:00");
 		daoHoraio.agregarHorario(hor);*/
 		
-		daoHoraio.listarHorario();
+		//daoHoraio.listarHorario();
 		
-		for (Horario horario: daoHoraio.listarHorario()) {
-			System.out.println(horario);
+		//for (Horario horario: daoHoraio.listarHorario()) {
+			//System.out.println(horario);
 		} 
 		
 		
 		
-		Persona per = new Persona();
+		/*Persona per = new Persona();
 		per.setEmail("admin@example.com");
 		per.setPassword("admin123");
 		per.setApellido("Lucero");
@@ -98,7 +98,7 @@ public class Inicio {
 	    //servicio.enviarCorreoApertura("justinmateolucero@gmail.com", "Justin", "20:20");
 	    //servicio.enviarCorreoCierre("correo_destino@gmail.com", "Juan", "20:00");
 		
-		List<Tarifa> listaTarifas = new ArrayList<>();
+		/*List<Tarifa> listaTarifas = new ArrayList<>();
 
 		Tarifa tarifa1 = new Tarifa();
 		tarifa1.setTiempo(30);
@@ -182,6 +182,6 @@ public class Inicio {
             daoHorario.agregarHorario(h);
         }
 		
-	}
+	}*/
 }
 

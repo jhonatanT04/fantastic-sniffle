@@ -62,10 +62,10 @@ public class TicketService {
         	}
             
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token no proporcionado")).build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Token no proporcionado").build();
             }
             String token = authHeader.substring("Bearer".length()).trim();
-            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            String secretKey = System.getenv("JWT_SECRET_KEY"); 
             Claims claims;
             try {
                 claims = Jwts.parser()
@@ -74,16 +74,12 @@ public class TicketService {
                         .parseClaimsJws(token)
                         .getBody();
             } catch (ExpiredJwtException e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Token expirado").build();
             } catch (Exception e) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Error al validar el token").build();
             }
             
-            Integer id = claims.get("id", Integer.class);
-            
-            if(id!=ticket.getUsuario().getId()) {
-            	return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Acceso denegado")).build();
-            }
+            Integer id = ticket.getUsuario().getId();            
             
             if(gTickets.buscarTicketPendientePorPersona(id).size() > 2) {
             	return Response.status(400).entity(new Respuesta(Respuesta.ERROR, "Existen Tickets pendientes")).build();

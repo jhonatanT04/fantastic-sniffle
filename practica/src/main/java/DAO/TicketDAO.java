@@ -68,13 +68,12 @@ public class TicketDAO {
         if (ticket != null) {
             LocalDateTime ahora = LocalDateTime.now();
             DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
-
+            
             ticket.setFechaSalida(ahora.format(formatoFechaHora)); 
             
 
-            String horaEntrada = ticket.getFechaIngreso().split(" ")[1]; 
-            String horaSalida = ahora.format(formatoHora);
+            String horaEntrada = ticket.getFechaIngreso(); 
+            String horaSalida = ahora.format(formatoFechaHora);
 
 
             double valorTotal = tarifaDAO.consultaValorApagar(horaEntrada, horaSalida);
@@ -88,6 +87,36 @@ public class TicketDAO {
         
         return (ticket != null) ? em.merge(ticket) : null;
     }
+    
+    public Ticket consultarValorApagarTicket(String placa) {
+        if (placa == null || placa.isEmpty()) {
+            return null; 
+        }
+
+        placa = placa.toUpperCase(); 
+        TypedQuery<Ticket> query = em.createQuery(
+                "SELECT t FROM Ticket t WHERE t.placa = :placa AND t.fechaSalida IS NULL", Ticket.class);
+        query.setParameter("placa", placa);
+        
+        List<Ticket> resultados = query.getResultList();
+        Ticket ticket = resultados.isEmpty() ? null : resultados.get(0);
+        
+        if (ticket != null) {
+            LocalDateTime ahora = LocalDateTime.now();
+            DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            
+            String horaEntrada = ticket.getFechaIngreso(); 
+            String horaSalida = ahora.format(formatoFechaHora);
+
+
+            double valorTotal = tarifaDAO.consultaValorApagar(horaEntrada, horaSalida);
+            ticket.setValorTotal(valorTotal);
+            
+        }
+        
+        return ticket;
+    }
+    
 
     public Ticket entradaTicket(String placa) {
     	placa.toUpperCase();

@@ -187,7 +187,37 @@ public class TicketService {
             return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al buscar el ticket")).build();
         }
     }
-    
+    @GET
+    @Path("/valorApagaraTicket/{placa}")
+    @Produces("application/json")
+    public Response valorApagarTicket(@HeaderParam("Authorization") String authHeader,@PathParam("placa") String placa) {
+        try {
+        	String token = authHeader.substring("Bearer".length()).trim();
+            //String secretKey = System.getenv("JWT_SECRET_KEY"); 
+            Claims claims;
+            try {
+                claims = Jwts.parser()
+                		.setSigningKey(Keys.hmacShaKeyFor("mi_clave_secreta_que_tiene_256_bits!!!!!".getBytes()))
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Token expirado")).build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(new Respuesta(Respuesta.ERROR, "Error al validar el token")).build();
+            }
+            
+            Ticket ticket = gTickets.valorApagarTicket(placa);
+            
+            if (ticket == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(ticket).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(503).entity(new Respuesta(Respuesta.ERROR, "Error al buscar el ticket")).build();
+        }
+    }
     
     @PUT
     @Path("/cambiarEstado")

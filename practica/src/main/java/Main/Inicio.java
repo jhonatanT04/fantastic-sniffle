@@ -51,11 +51,11 @@ public class Inicio {
 		/*hor.setDia("Jueves");
 		hor.setHoraApertura("12:00");
 		hor.setHoraCierre("20:00");
-		daoHoraio.agregarHorario(hor);*/
+		daoHoraio.agregarHorario(hor);
 		
 		//daoHoraio.listarHorario();
 		
-		/*for (Horario horario: daoHoraio.listarHorario()) {
+		for (Horario horario: daoHoraio.listarHorario()) {
 			System.out.println(horario);
 		} 
 		

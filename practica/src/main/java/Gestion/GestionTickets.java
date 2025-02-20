@@ -35,6 +35,9 @@ public class GestionTickets {
     public Ticket buscarTicketPendientePorPlaca(String placa) {
         return ticketDAO.buscarTicketPendientePorPlaca(placa);
     }
+    public Ticket valorApagarTicket(String placa) {
+        return ticketDAO.consultarValorApagarTicket(placa);
+    }
     
     public List<Ticket> buscarTicketPendientePorPersona(int id) {
         return ticketDAO.buscarTicketPendientePorPersona(id);

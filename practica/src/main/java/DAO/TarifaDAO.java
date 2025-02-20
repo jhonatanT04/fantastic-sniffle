@@ -1,6 +1,7 @@
 package DAO;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -41,15 +42,23 @@ public class TarifaDAO {
 
 
     public List<Tarifa> listarTarifa() {
-        TypedQuery<Tarifa> query = em.createQuery("SELECT t FROM Tarifa t", Tarifa.class);
+    	TypedQuery<Tarifa> query = em.createQuery(
+    	        "SELECT t FROM Tarifa t ORDER BY " +
+    	        "CASE WHEN t.tipo = 'm' THEN 1 " +  
+    	        "     WHEN t.tipo = 'H' THEN 2 " +  
+    	        "     WHEN t.tipo = 'D' THEN 3 " +  
+    	        "     WHEN t.tipo = 'M' THEN 4 END, " +  
+    	        " t.tiempo ASC", Tarifa.class
+    	    );
         return query.getResultList();
     }
     
     public double consultaValorApagar(String horaEntrada, String horaSalida) {
         List<Tarifa> tarifas = this.listarTarifa();
 
-        LocalTime fechaInicio = LocalTime.parse(horaEntrada, DateTimeFormatter.ofPattern("HH:mm"));
-        LocalTime fechaFin = LocalTime.parse(horaSalida, DateTimeFormatter.ofPattern("HH:mm"));
+        
+        LocalDateTime fechaInicio = LocalDateTime.parse(horaEntrada, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        LocalDateTime fechaFin = LocalDateTime.parse(horaSalida, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
         Duration duracion = Duration.between(fechaInicio, fechaFin);
 
         long dias = duracion.toDays();
@@ -57,7 +66,9 @@ public class TarifaDAO {
         long minutos = duracion.toMinutes() % 60;
 
         double costoTotal = 0.0;
-
+        if(dias==0 && horas==0 && minutos==0) {
+        	return 0.1;
+        }
         
         if (dias > 0) {
             Tarifa tarifaDia = tarifas.stream()
@@ -90,8 +101,12 @@ public class TarifaDAO {
                 costoTotal += (minutos / 30.0) * tarifaMinuto.getCosto();
             }
         }
+        if(dias==0) {
+        	
+        }
 
         return costoTotal;
     }
+
     
 }

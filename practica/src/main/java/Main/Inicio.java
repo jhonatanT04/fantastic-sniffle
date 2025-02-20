@@ -22,7 +22,7 @@ import ups.practica.*;
 @Singleton
 @Startup
 public class Inicio {
-	@Inject
+	/*@Inject
 	private HorarioDAO daoHoraio;
 	
 	@Inject
@@ -38,7 +38,7 @@ public class Inicio {
     private HorarioDAO daoHorario;
     
     @Inject
-    private ContratoDAO contratoDAO;
+    private ContratoDAO contratoDAO;*/
     
     @Inject
     private NotificacionService notificacionService;
@@ -47,15 +47,15 @@ public class Inicio {
 		System.out.println("Hola mundo EJB");
 		Horario hor = new Horario();
 		notificacionService.verificarHorariosYNotificar();
-		contratoDAO.revisarYFinalizarContratos();
+		//contratoDAO.revisarYFinalizarContratos();
 		/*hor.setDia("Jueves");
 		hor.setHoraApertura("12:00");
 		hor.setHoraCierre("20:00");
 		daoHoraio.agregarHorario(hor);*/
 		
-		daoHoraio.listarHorario();
+		//daoHoraio.listarHorario();
 		
-		for (Horario horario: daoHoraio.listarHorario()) {
+		/*for (Horario horario: daoHoraio.listarHorario()) {
 			System.out.println(horario);
 		} 
 		
@@ -98,7 +98,7 @@ public class Inicio {
 	    //servicio.enviarCorreoApertura("justinmateolucero@gmail.com", "Justin", "20:20");
 	    //servicio.enviarCorreoCierre("correo_destino@gmail.com", "Juan", "20:00");
 		
-		List<Tarifa> listaTarifas = new ArrayList<>();
+		/*List<Tarifa> listaTarifas = new ArrayList<>();
 
 		Tarifa tarifa1 = new Tarifa();
 		tarifa1.setTiempo(30);
@@ -156,8 +156,8 @@ public class Inicio {
         for (String dia : diasSemana) {
             Horario horario = new Horario();
             horario.setDia(dia);
-            horario.setHoraApertura("08:00:00");
-            horario.setHoraCierre("18:00:00");
+            horario.setHoraApertura("08:00");
+            horario.setHoraCierre("18:00");
             horario.setTipoHorario("Normal");
             daoHorario.agregarHorario(horario);
         }
@@ -180,8 +180,7 @@ public class Inicio {
 
         for (Horario h : horariosEspeciales) {
             daoHorario.agregarHorario(h);
-        }
+        }*/
 		
 	}
 }
-
